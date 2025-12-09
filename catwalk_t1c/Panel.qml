@@ -96,6 +96,7 @@ Item {
                     font.pointSize: Style.fontSizeXL
                     font.weight: Font.Bold
                     color: Color.mOnSurface
+                    font.family: "Cartograph CF"
                 }
             }
         }
