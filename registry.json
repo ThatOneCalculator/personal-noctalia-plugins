@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "plugins": [
+    {
+      "id": "catwalk",
+      "name": "Catwalk",
+      "version": "1.0.0",
+      "author": "MannuVilasara, ThatOneCalculator",
+      "description": "A cute animated cat for your bar, edited to my liking.",
+      "repository": "https://github.com/ThatOneCalculator/noctalia-plugins",
+      "minNoctaliaVersion": "3.6.0",
+      "license": "MIT"
+    }
+  ]
+}

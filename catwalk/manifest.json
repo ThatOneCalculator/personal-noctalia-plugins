@@ -1,0 +1,20 @@
+{
+  "id": "catwalk",
+  "name": "Catwalk",
+  "version": "1.0.0",
+  "minNoctaliaVersion": "3.6.0",
+  "author": "MannuVilasara, ThatOneCalculator",
+  "license": "MIT",
+  "repository": "https://github.com/ThatOneCalculator/noctalia-plugins",
+  "description": "A cute animated cat for your bar, edited to my liking.",
+  "entryPoints": {
+    "barWidget": "BarWidget.qml",
+    "panel": "Panel.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {}
+  }
+}
