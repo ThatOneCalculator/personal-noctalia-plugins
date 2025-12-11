@@ -186,4 +186,7 @@ Rectangle {
         }
         onWheel: wheel => root.wheel(wheel.angleDelta.y)
     }
+    onRightClicked: {
+        Quickshell.execDetached(["missioncenter"]);
+    }
 }
