@@ -18,41 +18,65 @@ NIconButton {
   property string widgetId: ""
   property string section: ""
 
-  signal fanStateChanged(int newFanState)
 
   property Process getFanState: Process {
-    id: getFanState
-    command: ["fan_state", "get_int"]
+    id: getFanStateProcess
+    command: ["fan_state", "get-int"]
     running: false
 
     stdout: StdioCollector {
       id: stdoutCollector
     }
+
+    onExited: function (exitCode, exitStatus) {
+      if (exitCode === 0) {
+        const output = parseInt(stdoutCollector.text.trim());
+        if (!isNaN(output)) {
+          root.fanState = output;
+        }
+      } else {
+        Logger.e("ASUS Fan State", `Failed to get fan state`);
+      }
+    }
+  }
+
+  Component.onCompleted: {
+    getFanStateProcess.running = true;
   }
 
   function setFanState(value) {
-      Quickshell.execDetached(["fan_state", "set", value])
-      fanStateChanged(value)
+    Quickshell.execDetached(["fan_state", "set", value]);
+    getFanStateProcess.running = true;
   }
 
   function fanStateString() {
-      switch (fanState) {
-          case 0: return pluginApi?.tr("tooltip.standard") || "Standard"
-          case 1: return pluginApi?.tr("tooltip.quiet") || "Quiet"
-          case 2: return pluginApi?.tr("tooltip.high") || "High-Performance"
-          case 3: return pluginApi?.tr("tooltip.full") || "Full-Performance"
-          default: return pluginApi?.tr("tooltip.unknown") || "Unknown"
-      }
+    switch (fanState) {
+    case 0:
+      return pluginApi?.tr("tooltip.standard") || "Standard";
+    case 1:
+      return pluginApi?.tr("tooltip.quiet") || "Quiet";
+    case 2:
+      return pluginApi?.tr("tooltip.high") || "High-Performance";
+    case 3:
+      return pluginApi?.tr("tooltip.full") || "Full-Performance";
+    default:
+      return pluginApi?.tr("tooltip.unknown") || "Unknown";
+    }
   }
-  
+
   function fanStateIcon() {
-      switch (fanState) {
-          case 0: return "car-fan"
-          case 1: return "car-fan-1"
-          case 2: return "car-fan-2"
-          case 3: return "car-fan-3"
-          default: return "car-fan"
-      }
+    switch (fanState) {
+    case 0:
+      return "car-fan";
+    case 1:
+      return "car-fan-1";
+    case 2:
+      return "car-fan-2";
+    case 3:
+      return "car-fan-3";
+    default:
+      return "car-fan";
+    }
   }
 
   icon: fanStateIcon()
@@ -68,6 +92,6 @@ NIconButton {
   colorBorderHover: Color.transparent
 
   onClicked: {
-      setFanState((fanState + 1) % 4)
+    setFanState((fanState + 1) % 4);
   }
 }
