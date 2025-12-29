@@ -4,7 +4,7 @@
     {
       "id": "asus_um5606_fan_state",
       "name": "ASUS UM5606 Fan State",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "ThatOneCalculator",
       "description": "Set the fan state on the ZenBook S 16 UM5606",
       "repository": "https://github.com/ThatOneCalculator/noctalia-plugins",
