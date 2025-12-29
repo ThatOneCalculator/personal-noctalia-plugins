@@ -30,9 +30,9 @@ NIconButton {
     }
   }
 
-  function setFanState(newFanState) {
-      Quickshell.execDetached(["fan_state", "set", newFanState])
-      fanStateChanged(newFanState)
+  function setFanState(value) {
+      Quickshell.execDetached(["fan_state", "set", value])
+      fanStateChanged(value)
   }
 
   function fanStateString() {
