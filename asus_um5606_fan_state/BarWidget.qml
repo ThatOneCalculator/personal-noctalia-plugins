@@ -49,7 +49,7 @@ NIconButton {
     getFanStateProcess.running = true;
   }
 
-  function fanStateString() {
+  function getTooltip() {
     switch (fanState) {
     case 0:
       return pluginApi?.tr("tooltip.standard") || "Standard";
@@ -64,7 +64,7 @@ NIconButton {
     }
   }
 
-  function fanStateIcon() {
+  function getIcon() {
     switch (fanState) {
     case 0:
       return "car-fan";
@@ -78,16 +78,31 @@ NIconButton {
       return "car-fan";
     }
   }
+  
+  function getColor() {
+  switch (fanState) {
+  case 3:
+    return Color.mPrimary;
+  case 2:
+    return "#c4a7e7";
+  case 1:
+    return Color.mSecondary;
+  case 0:
+    return Color.mOnSurface;
+  default:
+    return Color.mOnSurface;
+  }
+  }
 
-  icon: fanStateIcon()
-  tooltipText: fanStateString()
+  icon: getIcon()
+  tooltipText: getTooltip()
   tooltipDirection: BarService.getTooltipDirection()
   baseSize: Style.capsuleHeight
   applyUiScale: false
   density: Settings.data.bar.density
   customRadius: Style.radiusL
   colorBg: Style.capsuleColor
-  colorFg: Color.mOnSurface
+  colorFg: getColor()
   colorBorder: Color.transparent
   colorBorderHover: Color.transparent
 
