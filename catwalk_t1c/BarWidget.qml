@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 import Quickshell
+import Quickshell.Io
 import qs.Commons
 import qs.Modules.Bar.Extras
 import qs.Services.UI
@@ -84,6 +85,19 @@ Rectangle {
     // ]
 
     property real cpuUsage: SystemStatService.cpuUsage
+    
+    function openPanel() {
+        if (pluginApi) {
+            var result = pluginApi.openPanel(root.screen);
+            Logger.i("Catwalk", "OpenPanel result:", result);
+        } else {
+            Logger.e("Catwalk", "PluginAPI is null");
+        }
+    }
+    
+    function openExternalMonitor() {
+        Quickshell.execDetached(["sh", "-c", Settings.data.systemMonitor.externalMonitor]);
+    }
 
     Timer {
         interval: Math.max(30, 200 - root.cpuUsage * 1.7)
@@ -168,19 +182,16 @@ Rectangle {
             if (!root.enabled && !root.allowClickWhenDisabled) {
                 return;
             }
+            // Open Panel on left/right click
+            // Open external monitor on middle click
             if (mouse.button === Qt.LeftButton) {
+                root.openPanel();
                 root.clicked();
-                // Open Panel on click
-                if (pluginApi) {
-                    var result = pluginApi.openPanel(root.screen);
-                    Logger.i("Catwalk", "OpenPanel result:", result);
-                } else {
-                    Logger.e("Catwalk", "PluginAPI is null");
-                }
             } else if (mouse.button === Qt.RightButton) {
-                Quickshell.execDetached(["missioncenter"]);
+                root.openPanel();
                 root.rightClicked();
             } else if (mouse.button === Qt.MiddleButton) {
+                root.openExternalMonitor();
                 root.middleClicked();
             }
         }
