@@ -17,6 +17,9 @@ NIconButton {
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
+  property string tooltipDirection: BarService.getTooltipDirection()
+  property string density: Settings.data.bar.density
+  property bool hovering: false
 
 
   property Process getFanState: Process {
@@ -99,7 +102,6 @@ NIconButton {
   tooltipDirection: BarService.getTooltipDirection()
   baseSize: Style.capsuleHeight
   applyUiScale: false
-  density: Settings.data.bar.density
   customRadius: Style.radiusL
   colorBg: Style.capsuleColor
   colorFg: getColor()
