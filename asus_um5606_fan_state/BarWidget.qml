@@ -19,8 +19,6 @@ NIconButton {
   property string section: ""
   property string tooltipDirection: BarService.getTooltipDirection()
   property string density: Settings.data.bar.density
-  property bool hovering: false
-
 
   property Process getFanState: Process {
     id: getFanStateProcess
@@ -99,7 +97,6 @@ NIconButton {
 
   icon: getIcon()
   tooltipText: getTooltip()
-  tooltipDirection: BarService.getTooltipDirection()
   baseSize: Style.capsuleHeight
   applyUiScale: false
   customRadius: Style.radiusL
