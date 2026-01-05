@@ -35,7 +35,7 @@ NIconButton {
 
   Connections {
     target: pluginApi?.mainInstance ?? null
-    
+
     function onFanStateChanged() {
       Logger.i("ASUS Fan State Widget", `onFanStateChanged called, target: ${target}, new fanState: ${target?.fanState}`);
       if (target) {
@@ -80,20 +80,20 @@ NIconButton {
       return "car-fan";
     }
   }
-  
+
   function getColor() {
-  switch (fanState) {
-  case 3:
-    return Color.mPrimary;
-  case 2:
-    return "#c4a7e7";
-  case 1:
-    return Color.mSecondary;
-  case 0:
-    return Color.mOnSurface;
-  default:
-    return Color.mOnSurface;
-  }
+    switch (fanState) {
+    case 3:
+      return Color.mPrimary;
+    case 2:
+      return "#c4a7e7";
+    case 1:
+      return Color.mSecondary;
+    case 0:
+      return Color.mOnSurface;
+    default:
+      return Color.mOnSurface;
+    }
   }
 
   icon: getIcon()

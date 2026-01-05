@@ -5,10 +5,12 @@ import qs.Commons
 
 Item {
   id: root
-  
+
   property var pluginApi: null
 
   property int fanState: -1
+
+  property string statePath: Qt.resolvedUrl(Quickshell.env("XDG_RUNTIME_DIR") + "/fan_state")
 
   property Process getFanState: Process {
     id: getFanStateProcess
@@ -30,6 +32,18 @@ Item {
       } else {
         Logger.e("ASUS Fan State", "Failed to get fan state");
       }
+    }
+  }
+
+  property FileView fanStateFile: FileView {
+    id: fanFile
+    path: root.statePath
+    watchChanges: true
+    printErrors: false
+
+    onFileChanged: {
+      Logger.e("ASUS Fan State", "Reloading fan state due to file change");
+      root.refreshFanState();
     }
   }
 
