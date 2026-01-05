@@ -20,34 +20,35 @@ NIconButton {
   property string tooltipDirection: BarService.getTooltipDirection()
   property string density: Settings.data.bar.density
 
-  property Process getFanState: Process {
-    id: getFanStateProcess
-    command: ["fan_state", "get-int"]
-    running: false
-
-    stdout: StdioCollector {
-      id: stdoutCollector
+  Component.onCompleted: {
+    if (pluginApi?.mainInstance) {
+      root.fanState = pluginApi.mainInstance.fanState;
+      pluginApi.mainInstance.refreshFanState();
     }
+  }
 
-    onExited: function (exitCode, exitStatus) {
-      if (exitCode === 0) {
-        const output = parseInt(stdoutCollector.text.trim());
-        if (!isNaN(output)) {
-          root.fanState = output;
-        }
-      } else {
-        Logger.e("ASUS Fan State", `Failed to get fan state`);
+  onPluginApiChanged: {
+    if (pluginApi?.mainInstance) {
+      root.fanState = pluginApi.mainInstance.fanState;
+    }
+  }
+
+  Connections {
+    target: pluginApi?.mainInstance ?? null
+    
+    function onFanStateChanged() {
+      Logger.i("ASUS Fan State Widget", `onFanStateChanged called, target: ${target}, new fanState: ${target?.fanState}`);
+      if (target) {
+        root.fanState = target.fanState;
       }
     }
   }
 
-  Component.onCompleted: {
-    getFanStateProcess.running = true;
-  }
-
   function setFanState(value) {
-    Quickshell.execDetached(["fan_state", "set", value]);
-    getFanStateProcess.running = true;
+    Logger.i("ASUS Fan State Widget", `setFanState called with value ${value}, pluginApi.mainInstance: ${pluginApi?.mainInstance}`);
+    if (pluginApi?.mainInstance) {
+      pluginApi.mainInstance.setFanState(value);
+    }
   }
 
   function getTooltip() {
@@ -106,6 +107,7 @@ NIconButton {
   colorBorderHover: Color.transparent
 
   onClicked: {
+    Logger.i("ASUS Fan State Widget", `Clicked, current fanState: ${fanState}`);
     setFanState((fanState + 1) % 4);
   }
 }

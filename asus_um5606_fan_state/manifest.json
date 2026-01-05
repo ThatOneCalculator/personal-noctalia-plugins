@@ -8,6 +8,7 @@
   "repository": "https://github.com/ThatOneCalculator/noctalia-plugins",
   "description": "Set the fan state on the ZenBook S 16 UM5606",
   "entryPoints": {
+    "main": "Main.qml",
     "barWidget": "BarWidget.qml"
   },
   "dependencies": {
