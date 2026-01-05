@@ -6,86 +6,97 @@ import qs.Services.System
 import qs.Widgets
 
 Item {
-  id: root
-  property var pluginApi: null
+    id: root
+    property var pluginApi: null
 
-  // SmartPanel properties
-  readonly property var geometryPlaceholder: panelContainer
-  readonly property bool allowAttach: true
-  property real contentPreferredWidth: 300 * Style.uiScaleRatio
-  property real contentPreferredHeight: 300 * Style.uiScaleRatio
+    // SmartPanel properties
+    readonly property var geometryPlaceholder: panelContainer
+    readonly property bool allowAttach: true
+    property real contentPreferredWidth: 300 * Style.uiScaleRatio
+    property real contentPreferredHeight: 300 * Style.uiScaleRatio
 
-  anchors.fill: parent
-
-  Rectangle {
-    id: panelContainer
     anchors.fill: parent
-    color: Color.transparent
 
     Rectangle {
-      anchors.fill: parent
-      anchors.margins: Style.marginL
-      color: Color.mSurface
-      radius: Style.radiusL
-      border.color: Color.mOutline
-      border.width: Style.borderS
+        id: panelContainer
+        anchors.fill: parent
+        color: "transparent"
 
-      ColumnLayout {
-        anchors.centerIn: parent
-        spacing: Style.marginL
-
-        // Big Cat
-        Item {
-          id: bigCatItem
-          Layout.preferredWidth: 128 * Style.uiScaleRatio
-          Layout.preferredHeight: 128 * Style.uiScaleRatio
-          Layout.alignment: Qt.AlignHCenter
-
-          property int frameIndex: 0
-          property bool isRunning: true
-
-          readonly property bool isLightMode: (Color.mOnSurface.r * 0.299 + Color.mOnSurface.g * 0.587 + Color.mOnSurface.b * 0.114) < 0.5
-          readonly property string iconPrefix: isLightMode ? "icons/black/" : "icons/"
-
-          readonly property var icons: [bigCatItem.iconPrefix + "my-active-0-symbolic.svg", bigCatItem.iconPrefix + "my-active-1-symbolic.svg", bigCatItem.iconPrefix + "my-active-2-symbolic.svg", bigCatItem.iconPrefix + "my-active-3-symbolic.svg", bigCatItem.iconPrefix + "my-active-4-symbolic.svg"]
-
-          property int idleFrameIndex: 0
-          readonly property var idleIcons: [bigCatItem.iconPrefix + "my-idle-0-symbolic.svg", bigCatItem.iconPrefix + "my-idle-1-symbolic.svg", bigCatItem.iconPrefix + "my-idle-2-symbolic.svg", bigCatItem.iconPrefix + "my-idle-3-symbolic.svg"]
-
-          Timer {
-            interval: Math.max(30, 200 - SystemStatService.cpuUsage * 1.7)
-            running: bigCatItem.isRunning && SystemStatService.cpuUsage >= 10
-            repeat: true
-            onTriggered: bigCatItem.frameIndex = (bigCatItem.frameIndex + 1) % bigCatItem.icons.length
-          }
-
-          Timer {
-            interval: 400
-            running: bigCatItem.isRunning && SystemStatService.cpuUsage < 10
-            repeat: true
-            onTriggered: bigCatItem.idleFrameIndex = (bigCatItem.idleFrameIndex + 1) % bigCatItem.idleIcons.length
-          }
-
-          Image {
-            id: bigCatImage
+        Rectangle {
             anchors.fill: parent
-            source: (bigCatItem.isRunning && SystemStatService.cpuUsage >= 10) ? Qt.resolvedUrl(bigCatItem.icons[bigCatItem.frameIndex]) : Qt.resolvedUrl(bigCatItem.idleIcons[bigCatItem.idleFrameIndex])
-            fillMode: Image.PreserveAspectFit
-            smooth: true
-            visible: true
-          }
-        }
+            anchors.margins: Style.marginL
+            color: Color.mSurface
+            radius: Style.radiusL
+            border.color: Color.mOutline
+            border.width: Style.borderS
 
-        // CPU Stats
-        Text {
-          Layout.alignment: Qt.AlignHCenter
-          text: "CPU: " + Math.round(SystemStatService.cpuUsage) + "%"
-          font.pointSize: Style.fontSizeXL
-          font.weight: Font.Bold
-          color: Color.mOnSurface
-          font.family: "Cartograph CF"
+            ColumnLayout {
+                anchors.centerIn: parent
+                spacing: Style.marginL
+
+                // Big Cat
+                Item {
+                    id: bigCatItem
+                    Layout.preferredWidth: 128 * Style.uiScaleRatio
+                    Layout.preferredHeight: 128 * Style.uiScaleRatio
+                    Layout.alignment: Qt.AlignHCenter
+
+                    property int frameIndex: 0
+                    
+                    readonly property bool isRunning: root.pluginApi?.mainInstance?.isRunning ?? false
+                    readonly property var icons: root.pluginApi?.mainInstance?.icons || []
+                    
+                    property int idleFrameIndex: 0
+                    readonly property var idleIcons: root.pluginApi?.mainInstance?.idleIcons || []
+                    
+                    readonly property real cpuUsage: root.pluginApi?.mainInstance?.cpuUsage ?? 0
+
+                    Timer {
+                        interval: Math.max(30, 200 - bigCatItem.cpuUsage * 1.7)
+                        running: bigCatItem.isRunning
+                        repeat: true
+                        onTriggered: bigCatItem.frameIndex = (bigCatItem.frameIndex + 1) % bigCatItem.icons.length
+                    }
+                    
+                    Timer {
+                        interval: 400
+                        running: !bigCatItem.isRunning
+                        repeat: true
+                        onTriggered: bigCatItem.idleFrameIndex = (bigCatItem.idleFrameIndex + 1) % bigCatItem.idleIcons.length
+                    }
+
+                    Image {
+                        id: bigCatImage
+                        anchors.fill: parent
+                        
+                        source: (bigCatItem.icons && bigCatItem.icons.length > 0 && bigCatItem.idleIcons && bigCatItem.idleIcons.length > 0)
+                                ? (bigCatItem.isRunning
+                                    ? Qt.resolvedUrl(bigCatItem.icons[bigCatItem.frameIndex % bigCatItem.icons.length])
+                                    : Qt.resolvedUrl(bigCatItem.idleIcons[bigCatItem.idleFrameIndex % bigCatItem.idleIcons.length]))
+                                : ""
+                        
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        mipmap: true
+
+                        // This handles the programmatic coloring
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            colorization: 1.0
+                            colorizationColor: Settings.data.colorSchemes.darkMode ? "white" : "black"
+                        }
+                    }
+                }
+
+                // CPU Stats
+                Text {
+                    Layout.alignment: Qt.AlignHCenter
+                    text: (pluginApi?.tr("panel.cpuLabel") || "CPU: {usage}%").replace("{usage}", Math.round(root.pluginApi?.mainInstance?.cpuUsage ?? 0))
+                    font.pointSize: Style.fontSizeXL
+                    font.weight: Font.Bold
+                    color: Settings.data.colorSchemes.darkMode ? "white" : "black"
+                }
+            }
         }
-      }
     }
-  }
 }
