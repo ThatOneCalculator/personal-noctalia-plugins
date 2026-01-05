@@ -114,7 +114,8 @@ Rectangle {
     RowLayout {
       id: contentRow
       anchors.centerIn: parent
-      anchors.horizontalCenterOffset: -0.5
+      // Optical alignment bs
+      anchors.horizontalCenterOffset: -0.25
 
       NIcon {
         icon: getIcon()
