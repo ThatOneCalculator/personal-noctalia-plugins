@@ -15,5 +15,4 @@ Item {
 
     readonly property var icons: ["icons/my-active-0-symbolic.svg", "icons/my-active-1-symbolic.svg", "icons/my-active-2-symbolic.svg", "icons/my-active-3-symbolic.svg", "icons/my-active-4-symbolic.svg"]
     readonly property var idleIcons: ["icons/my-idle-0-symbolic.svg", "icons/my-idle-1-symbolic.svg", "icons/my-idle-2-symbolic.svg", "icons/my-idle-3-symbolic.svg"]
-    readonly property string idleIconBar: "icons/my-idle-bar-symbolic.svg"
 }

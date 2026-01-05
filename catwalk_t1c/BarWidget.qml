@@ -66,7 +66,6 @@ Rectangle {
     readonly property bool isRunning: root.pluginApi?.mainInstance?.isRunning ?? false  
     readonly property var icons: root.pluginApi?.mainInstance?.icons || []
     readonly property var idleIcons: root.pluginApi?.mainInstance?.idleIcons || []
-    readonly property var idleIcon: Qt.resolvedUrl(root.pluginApi?.mainInstance?.idleIconBar)
     readonly property real cpuUsage: root.pluginApi?.mainInstance?.cpuUsage ?? 0
     
     function openPanel() {
@@ -103,7 +102,7 @@ Rectangle {
     currentIconSource: (root.icons && root.icons.length > 0 && root.idleIcons && root.idleIcons.length > 0)
                        ? (root.isRunning
                            ? Qt.resolvedUrl(root.icons[root.frameIndex % root.icons.length])
-                           : idleIcon)
+                           : Qt.resolvedUrl(root.idleIcons[0]))
                        : ""
 
 
