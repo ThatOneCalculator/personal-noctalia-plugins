@@ -42,7 +42,7 @@ Item {
     printErrors: false
 
     onFileChanged: {
-      Logger.e("ASUS Fan State", "Reloading fan state due to file change");
+      Logger.i("ASUS Fan State", "Reloading fan state");
       root.refreshFanState();
     }
   }
@@ -53,7 +53,6 @@ Item {
 
   function setFanState(value) {
     Quickshell.execDetached(["fan_state", "set", value]);
-    getFanStateProcess.running = true;
   }
 
   function refreshFanState() {
