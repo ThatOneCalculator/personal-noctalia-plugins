@@ -14,7 +14,7 @@ Item {
 
   property Process getFanState: Process {
     id: getFanStateProcess
-    command: ["fan_state", "get-int"]
+    command: ["fan_state", "get", "--int"]
     running: false
 
     stdout: StdioCollector {
